@@ -29,19 +29,7 @@ struct BinaryOperation : Expression {
         delete left;
     }
 
-    virtual double evaluate() const override {
-        double res = 0;
-        if (this->op == '+') {
-            res = left->evaluate() + right->evaluate();
-        } else if (this->op == '-') {
-            res = left->evaluate() - right->evaluate();
-        } else if (this->op == '*') {
-            res = left->evaluate() * right->evaluate();
-        } else if (this->op == '/') {
-            res = left->evaluate() / right->evaluate();
-        }
-        return res;
-    }
+    virtual double evaluate() const override;
 
   private:
     Expression const* left;
@@ -49,10 +37,27 @@ struct BinaryOperation : Expression {
     Expression const* right;
 };
 
+double BinaryOperation::evaluate() const {
+    double res = 0;
+    if (this->op == '+') {
+        res = left->evaluate() + right->evaluate();
+    } else if (this->op == '-') {
+        res = left->evaluate() - right->evaluate();
+    } else if (this->op == '*') {
+        res = left->evaluate() * right->evaluate();
+    } else if (this->op == '/' && (right->evaluate() != 0)) {
+        res = left->evaluate() / right->evaluate();
+    } else {
+        cout << "ERROR" << endl;
+    }
+    return res;
+}
+
 int main() {
     Expression* sube = new BinaryOperation(new Number(4.5), '*', new Number(5));
     Expression* expr = new BinaryOperation(new Number(3), '+', sube);
-    cout << expr->evaluate() << endl;
+    cout << expr->evaluate() << endl;   
+
     delete expr;
 
     return 0;
